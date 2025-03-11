@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickHub - Your Personalized Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 5vh 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background: #80CAFF center/cover no-repeat;
+            transition: background-image 1s ease-in-out, backdrop-filter 0.3s ease;
+        }
+        body.blur-background { backdrop-filter: blur(10px); }
+        .logo { width: 100px; margin-bottom: 20px; }
+        .time-display {
+            font: bold 48px 'Lato', sans-serif;
+            color: white;
+            margin-bottom: 10px;
+        }
+        .search-container {
+            width: 61.8%;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .search-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        .search-form.focused { background-color: rgba(255, 255, 255, 1); }
+        .search-box {
+            width: 100%;
+            padding: 15px 120px 15px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            background: transparent;
+            color: #fff;
+        }
+        .search-box.focused { color: #000; }
+        .search-box::placeholder { color: rgba(255, 255, 255, 0.7); }
+        .search-button {
+            position: absolute;
+            right: 5px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #80CAFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .search-button:hover { background-color: #005bb5; }
+        .icon-container {
+            width: 61.8%;
+            max-width: 600px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .icon img { width: 30px; height: 30px; border-radius: 10px; }
+        .icon:hover { transform: scale(1.1); background-color: rgba(255, 255, 255, 1); }
+        .icon-label {
+            margin-top: 10px;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+        }
+        .feedback-button, .easter-egg-button {
+            position: fixed;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .feedback-button { left: 20px; bottom: 20px; }
+        .feedback-button:hover { background-color: rgba(255, 255, 255, 0.4); }
+        .info-container {
+            position: fixed;
+            left: 20px;
+            bottom: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 10px 20px;
+            color: #fff;
+            font-size: 14px;
+            display: none;
+        }
+        .info-container p {
+            margin: 5px 0;
+        }
+        .info-container a {
+            color: #80CAFF;
+            text-decoration: none;
+        }
+        .info-container a:hover {
+            text-decoration: underline;
+        }
+        .easter-egg-button { right: 20px; bottom: 20px; }
+        .easter-egg-button:hover { background-color: rgba(255, 255, 255, 0.4); }
+        @media (max-width: 768px) {
+            .logo { width: 80px; }
+            .time-display { font-size: 36px; }
+            .search-container, .icon-container { width: 90%; }
+            .search-box { padding: 12px 100px 12px 15px; font-size: 14px; }
+            .search-button { padding: 10px 15px; font-size: 14px; }
+            .icon { width: 40px; height: 40px; margin: 5px; }
+            .icon img { width: 25px; height: 25px; }
+            .feedback-button, .info-container, .easter-egg-button { font-size: 12px; padding: 8px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <img class="logo" src="images/logo.png" alt="Logo">
+    <div class="time-display" id="timeDisplay"></div>
+    <div class="search-container">
+        <form class="search-form" action="https://www.bing.com/search" method="GET">
+            <input type="text" name="q" class="search-box" placeholder="在Bing上搜索...">
+            <button type="submit" class="search-button">GO</button>
+        </form>
+    </div>
+    <div class="icon-container">
+        <div class="icon-item">
+            <div class="icon" onclick="window.location.href='https://www.bilibili.com/'">
+                <img src="images/bl.webp" alt="Image">
+            </div>
+            <p class="icon-label">Bilibili</p>
+        </div>
+        <div class="icon-item">
+            <div class="icon" onclick="window.location.href='https://chat.deepseek.com/'">
+                <img src="images/ds.webp" alt="Image">
+            </div>
+            <p class="icon-label">DeepSeek</p>
+        </div>
+        <div class="icon-item">
+            <div class="icon" onclick="window.location.href='https://www.example.com/link3'">
+                <img src="images/icon0.png" alt="Image">
+            </div>
+            <p class="icon-label">待添加</p>
+        </div>
+        <div class="icon-item">
+            <div class="icon" onclick="window.location.href='https://www.example.com/link4'">
+                <img src="images/icon0.png" alt="Image">
+            </div>
+            <p class="icon-label">待添加</p>
+        </div>
+        <div class="icon-item">
+            <div class="icon" onclick="window.location.href='https://www.example.com/link5'">
+                <img src="images/icon0.png" alt="Image">
+            </div>
+            <p class="icon-label">待添加</p>
+        </div>
+        <div class="icon-item">
+            <div class="icon" onclick="window.location.href='https://www.example.com/link6'">
+                <img src="images/icon0.png" alt="Image">
+            </div>
+            <p class="icon-label">待添加</p>
+        </div>
+    </div>
+    <p style="color: white;">更多功能 敬请期待</p>
+    <button class="feedback-button" onclick="toggleInfo()">关于</button>
+    <div class="info-container" id="infoContainer">
+        <p>作者：<a href="https://space.bilibili.com/1338999331" target="_blank">哔哩哔哩</a></p>
+        <p>共创者：</p>
+        <p>DeepSeek</p>
+        <p>~</p>
+        <p>~</p>
+        <p>反馈邮箱：oyama@aliyun.com</p>
+        <p>ver:1.1(250311)</p>
+    </div>
+    <button class="easter-egg-button" onclick="window.location.href='https://m.bilibili.com/video/BV1GJ411x7h7'">彩蛋</button>
+
+    <script>
+        const backgroundImages = [
+            'https://webcnstatic.yostar.net/ba_cn_web/prod/upload/wallpaper/X0_6rTZl.jpeg',
+            'https://webcnstatic.yostar.net/ba_cn_web/prod/upload/wallpaper/2PvxbRjv.jpeg'
+        ];
+        let currentIndex = 0;
+        function changeBackground() {
+            currentIndex = (currentIndex + 1) % backgroundImages.length;
+            document.body.style.backgroundImage = `url('${backgroundImages[currentIndex]}')`;
+        }
+        setInterval(changeBackground, 5000);
+
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('timeDisplay').textContent = `${hours}:${minutes}`;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        function toggleInfo() {
+            const infoContainer = document.getElementById('infoContainer');
+            if (infoContainer.style.display === 'none' || infoContainer.style.display === '') {
+                infoContainer.style.display = 'block';
+            } else {
+                infoContainer.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const infoContainer = document.getElementById('infoContainer');
+            const feedbackButton = document.querySelector('.feedback-button');
+            if (event.target !== infoContainer && event.target !== feedbackButton) {
+                infoContainer.style.display = 'none';
+            }
+        });
+
+        const searchBox = document.querySelector('.search-box');
+        const searchForm = document.querySelector('.search-form');
+        const body = document.body;
+        searchBox.addEventListener('focus', () => {
+            body.classList.add('blur-background');
+            searchForm.classList.add('focused');
+            searchBox.classList.add('focused');
+        });
+        searchBox.addEventListener('blur', () => {
+            body.classList.remove('blur-background');
+            searchForm.classList.remove('focused');
+            searchBox.classList.remove('focused');
+        });
+    </script>
+</body>
+</html>
