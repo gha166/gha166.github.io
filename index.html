@@ -121,7 +121,6 @@
         document.addEventListener('click', function(event) {
             const infoContainer = document.getElementById('infoContainer');
             const feedbackButton = document.querySelector('.feedback-button');
-            // 如果点击的不是信息框或反馈按钮，则隐藏信息框
             if (event.target !== infoContainer && event.target !== feedbackButton && !infoContainer.contains(event.target)) {
                 infoContainer.style.display = 'none';
             }
